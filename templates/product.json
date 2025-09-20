@@ -6,7 +6,7 @@
         "vendor": {
           "type": "text",
           "settings": {
-            "text": "{{ product.vendor }}",
+            "text": "",
             "text_style": "uppercase"
           }
         },
@@ -57,6 +57,7 @@
         "description",
         "share"
       ],
+      "disabled": true,
       "settings": {
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
@@ -75,6 +76,7 @@
     },
     "related-products": {
       "type": "related-products",
+      "disabled": true,
       "settings": {
         "heading": "You may also like",
         "heading_size": "h2",
@@ -90,10 +92,95 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "custom_featured_product_Pg6tim": {
+      "type": "custom-featured-product",
+      "blocks": {
+        "title_NEYUtW": {
+          "type": "title",
+          "settings": {}
+        },
+        "price_pJRNta": {
+          "type": "price",
+          "settings": {}
+        },
+        "separator_TqNHLy": {
+          "type": "separator",
+          "settings": {
+            "padding_top": 10,
+            "padding_bottom": 10
+          }
+        },
+        "text_NLwwn4": {
+          "type": "text",
+          "settings": {
+            "text": "<p><em>This is a demonstation store. You can purchase products like this from <\/em><a href=\"https:\/\/www.youtube.com\/watch?v=dQw4w9WgXcQ\" title=\"https:\/\/www.youtube.com\/watch?v=dQw4w9WgXcQ\"><em>Kinto<\/em><\/a><\/p>"
+          }
+        },
+        "text_qjd49K": {
+          "type": "text",
+          "settings": {
+            "text": "{{ section.settings.product.description }}"
+          }
+        },
+        "variant_picker_mWPCpW": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons_x8cMrt": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "collapsible_content_Yqcc46": {
+          "type": "collapsible_content",
+          "settings": {
+            "title": "Details",
+            "text": "{{ section.settings.product.metafields.product.details | metafield_tag }}"
+          }
+        },
+        "collapsible_content_NjhWd8": {
+          "type": "collapsible_content",
+          "settings": {
+            "title": "Size",
+            "text": "<p>Smth about sizings<\/p>"
+          }
+        },
+        "collapsible_content_x4JUXL": {
+          "type": "collapsible_content",
+          "settings": {
+            "title": "Shipping & returns",
+            "text": "<p>Shipping & returns<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "title_NEYUtW",
+        "price_pJRNta",
+        "separator_TqNHLy",
+        "text_NLwwn4",
+        "text_qjd49K",
+        "variant_picker_mWPCpW",
+        "buy_buttons_x8cMrt",
+        "collapsible_content_Yqcc46",
+        "collapsible_content_NjhWd8",
+        "collapsible_content_x4JUXL"
+      ],
+      "name": "Custom Featured Product",
+      "settings": {
+        "color_scheme": "",
+        "product": "{{ product }}",
+        "slides_per_view": 1,
+        "show_navigation": true,
+        "padding_top": 50,
+        "padding_bottom": 50,
+        "padding_top_mobile": 25,
+        "padding_bottom_mobile": 25
+      }
     }
   },
   "order": [
     "main",
-    "related-products"
+    "related-products",
+    "custom_featured_product_Pg6tim"
   ]
 }
