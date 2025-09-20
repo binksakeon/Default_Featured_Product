@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -106,15 +115,12 @@
         },
         "separator_TqNHLy": {
           "type": "separator",
-          "settings": {
-            "padding_top": 10,
-            "padding_bottom": 10
-          }
+          "settings": {}
         },
         "text_NLwwn4": {
           "type": "text",
           "settings": {
-            "text": "<p><em>This is a demonstation store. You can purchase products like this from <\/em><a href=\"https:\/\/www.youtube.com\/watch?v=dQw4w9WgXcQ\" title=\"https:\/\/www.youtube.com\/watch?v=dQw4w9WgXcQ\"><em>Kinto<\/em><\/a><\/p>"
+            "text": "<p><em>This is a demonstation store. You can purchase products like this from </em><a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" title=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"><em>Kinto</em></a></p>"
           }
         },
         "text_qjd49K": {
@@ -142,14 +148,14 @@
           "type": "collapsible_content",
           "settings": {
             "title": "Size",
-            "text": "<p>Smth about sizings<\/p>"
+            "text": "<p>Smth about sizings</p>"
           }
         },
         "collapsible_content_x4JUXL": {
           "type": "collapsible_content",
           "settings": {
             "title": "Shipping & returns",
-            "text": "<p>Shipping & returns<\/p>"
+            "text": "<p>Shipping & returns</p>"
           }
         }
       },
