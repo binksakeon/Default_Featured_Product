@@ -100,7 +100,7 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   padding-right: 3rem;
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (min-width: 769px) {
   .page-width {
     padding: 0 5rem;
   }
@@ -1205,17 +1205,18 @@ button.shopify-payment-button__button--unbranded {
 .customer button,
 button.shopify-payment-button__button--unbranded {
   min-width: calc(12rem + var(--buttons-border-width) * 2);
-  min-height: calc(4.5rem + var(--buttons-border-width) * 2);
+  min-height: calc(60px + var(--buttons-border-width) * 2);
 }
 
 .button,
 .shopify-challenge__button,
-.customer button {
+.customer button,
+button.shopify-payment-button__button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border: 0;
-  padding: 0 3rem;
+  padding: 0 1.5rem;
   cursor: pointer;
   font: inherit;
   font-size: 1.5rem;
@@ -1224,6 +1225,10 @@ button.shopify-payment-button__button--unbranded {
   transition: box-shadow var(--duration-short) ease;
   -webkit-appearance: none;
   appearance: none;
+  background-color: rgba(var(--color-button), var(--alpha-button-background));
+}
+
+.shopify-payment-button__button--unbranded:hover:not([disabled]){
   background-color: rgba(var(--color-button), var(--alpha-button-background));
 }
 
@@ -1880,7 +1885,7 @@ input[type='checkbox'] {
   width: calc(14rem / var(--font-body-scale) + var(--inputs-border-width) * 2);
   display: flex;
   border-radius: var(--inputs-radius);
-  min-height: calc((var(--inputs-border-width) * 2) + 4.5rem);
+  min-height: calc((var(--inputs-border-width) * 2) + 60px);
 }
 
 .quantity:after {
