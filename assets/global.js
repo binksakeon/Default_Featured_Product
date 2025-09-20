@@ -1330,3 +1330,73 @@ class CartPerformance {
     );
   }
 }
+
+class CustomVariantPicker extends HTMLElement {
+  constructor() {
+    super();
+    
+    this.idInput = this.querySelector('input[name="id"]');
+    this.form = this.querySelector('form');
+    this.variantsInfo = this.querySelector('[data-variants-info]');
+    if(this.idInput && this.form && this.variantsInfo){
+      
+      this.addFormListener.call(this);
+    }
+    else{
+      return;
+    }
+  }
+  
+  addFormListener() {
+    this.form.addEventListener('change',()=>{
+      const optionsArray = Array.from(this.form.querySelectorAll('input:checked')).map((element)=>{
+        return element.value;
+      })
+      const rightVariant = this.getRightVariant(optionsArray)
+      if(rightVariant) {
+        this.idInput.value = rightVariant.id;
+      }
+
+      const productPrice = document.querySelector('[data-product-price]');
+      if(productPrice && rightVariant) {
+        if(rightVariant.compare_at_price) {
+          productPrice.innerHTML = `<span class="product-price__regular-price">$${(rightVariant.price / 100.0).toFixed(2)}</span>
+            <span class="product-price__compare-at-price">$${(rightVariant.compare_at_price / 100.0).toFixed(2)}</span>`;
+        }
+        else {
+          productPrice.innerHTML = `<span class="product-price__regular-price">$${(rightVariant.price / 100.0).toFixed(2)}</span>`;
+        }
+      }
+
+      const productVariantTitle = document.querySelector('[data-product-title] .variant-title');
+      if(productVariantTitle){
+        productVariantTitle.textContent = optionsArray[0];
+      }
+
+      const swatchOptionInputs = this.querySelectorAll('.variant-option__input-wrapper--color-swatch input:checked');
+      swatchOptionInputs.forEach((swatch)=>{
+        const swatchLabel = swatch.closest('.custom-variant-picker__variant-option')?.querySelector('.variant-option__swatch-label');
+        if(swatchLabel){
+          swatchLabel.textContent = swatch.value;
+        }
+      });
+    })
+  }
+
+  getRightVariant(options) {
+    const variantsInfoJson = Array.from(JSON.parse(this.variantsInfo.innerHTML));
+    const rightVariant = variantsInfoJson.find((variant)=>{
+      if(variant.options.length !== options.length){
+        return false;
+      }
+      return variant.options.every((option, index) => option === options[index]);
+    })
+    if(rightVariant) {
+      return rightVariant;
+    }
+    return false;
+  }
+
+}
+
+customElements.define('custom-variant-picker', CustomVariantPicker);
