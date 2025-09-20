@@ -1,0 +1,398 @@
+{{ 'section-custom-featured-product.css' | asset_url | stylesheet_tag }}
+{{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign product = section.settings.product | default: product
+  assign form_id = 'form-' | append: section.id
+-%}
+
+{%- unless product == blank -%}
+  {% render 'section-paddings',
+    padding_top: section.settings.padding_top,
+    padding_bottom: section.settings.padding_bottom,
+    padding_top_mobile: section.settings.padding_top_mobile,
+    padding_bottom_mobile: section.settings.padding_bottom_mobile
+  %}
+
+  <div class="page-width section-{{ section.id }}--padding custom-featured-product color-{{ section.settings.color_scheme.id }}">
+    <div class="custom-featured-product__slider-wrapper">
+      <div
+        class="swiper custom-featured-product__featured-slider"
+        style="--slides-per-view: {{ section.settings.slides_per_view }}"
+      >
+        <div class="swiper-wrapper">
+          {%- if product.images.size > 0 -%}
+            {%- for image in product.images -%}
+              <div class="swiper-slide featured-slider__slide">
+                {%- if forloop.first and section.index == 1 -%}
+                  {%- assign loading_lazy = 'eager' -%}
+                {%- else -%}
+                  {%- assign loading_lazy = 'lazy' -%}
+                {%- endif -%}
+                {{ image | image_url: width: 800 | image_tag: loading: loading_lazy }}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <div class="swiper-slide featured-slider__slide">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.show_navigation -%}
+          <div class="featured-slider__prev">{{ 'icon-arrow.svg' | inline_asset_content }}</div>
+          <div class="featured-slider__next">{{ 'icon-arrow.svg' | inline_asset_content }}</div>
+        {%- endif -%}
+        <div class="featured-slider__pagination"></div>
+      </div>
+      <div class="swiper custom-featured-product__featured-thumbs">
+        <div class="swiper-wrapper">
+          {%- if product.images.size > 1 -%}
+            {%- for image in product.images -%}
+              <div class="swiper-slide featured-thumbs__slide">
+                {{ image | image_url: width: 200 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endfor -%}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <div class="custom-featured-product__featured-product-info">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'title' -%}
+              <h2 class="featured-product-info__title" data-product-title>
+                {{ product.title }}
+                <span class="variant-title">
+                  {{- product.selected_or_first_available_variant.title | split: '/' | first -}}
+                </span>
+              </h2>
+            {%- when 'separator' -%}
+              <hr
+                class="featured-product-info__separator"
+                style="--margin-top: {{ block.settings.margin_top }}px; --margin-bottom: {{ block.settings.margin_bottom }}px"
+              >
+            {%- when 'text' -%}
+              <div class="featured-product-info__text">
+                {{ block.settings.text }}
+              </div>
+            {%- when 'price' -%}
+              <div class="featured-product-info__product-price" data-product-price>
+                <span class="product-price__regular-price">{{ product.price | money }}</span>
+                {%- if product.price < product.compare_at_price -%}
+                  <span class="product-price__compare-at-price">{{ product.compare_at_price | money }}</span>
+                {%- endif -%}
+              </div>
+            {%- when 'buy_buttons' -%}
+              <product-form>
+                {%- form 'product', product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form', class: 'featured-product-info__product-form' -%}
+                  {%- assign variant_picker_block = section.blocks | where: 'type', 'variant_picker' | size -%}
+                  {%- if variant_picker_block == 0 -%}
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  {%- endif -%}
+                  <quantity-input class="quantity cart-quantity product-form__quantity">
+                    <button
+                      class="quantity__button"
+                      name="minus"
+                      type="button"
+                      data-target="decrement-{{ product.selected_or_first_available_variant.id }}"
+                    >
+                      <span class="visually-hidden">
+                        {{-
+                          'products.product.quantity.decrease'
+                          | t: product: product.selected_or_first_available_variant.title
+                          | escape
+                        -}}
+                      </span>
+                      <span class="svg-wrapper">{{ 'icon-minus.svg' | inline_asset_content }}</span>
+                    </button>
+                    <input
+                      class="quantity__input"
+                      type="number"
+                      name="quantity"
+                      min="1"
+                      max="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+                      step="1"
+                      value="1"
+                      form="{{ form_id }}"
+                    >
+                    <button
+                      class="quantity__button"
+                      name="plus"
+                      type="button"
+                      data-target="increment-{{ product.selected_or_first_available_variant.id }}"
+                    >
+                      <span class="visually-hidden">
+                        {{-
+                          'products.product.quantity.increase'
+                          | t: product: product.selected_or_first_available_variant.title
+                          | escape
+                        -}}
+                      </span>
+                      <span class="svg-wrapper">{{ 'icon-plus.svg' | inline_asset_content }}</span>
+                    </button>
+                    {%- render 'progress-bar' -%}
+                  </quantity-input>
+                  <button type="submit" name="add" form="{{ form_id }}" class="product-form__submit button">
+                    {{ 'icon-cart-empty.svg' | inline_asset_content }}
+                    {{ 'products.product.add_to_cart' | t }}
+                    {%- render 'loading-spinner' -%}
+                  </button>
+                  {{ form | payment_button }}
+                {%- endform -%}
+              </product-form>
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                <custom-variant-picker class="featured-product-info__custom-variant-picker">
+                  <input
+                    type="hidden"
+                    name="id"
+                    value="{{ product.selected_or_first_available_variant.id }}"
+                    form="{{ form_id }}"
+                  >
+                  <form class="custom-variant-picker__form">
+                    {%- for option in product.options_with_values -%}
+                      <div class="custom-variant-picker__variant-option">
+                        <p class="variant-option__label">
+                          {{ option.name }}
+                          {% if option.values.first.swatch -%}
+                            <span class="variant-option__swatch-label">{{ option.values.first.name }}</span>
+                          {%- endif %}
+                        </p>
+                        <div class="variant-option__option-values">
+                        {%- for option_value in option.values -%}
+                          <label
+                            class="option-values__input-wrapper {% if option_value.swatch %}variant-option__input-wrapper--color-swatch{% endif %}"
+                            style="--variant-color: {{ option_value.swatch.color }}"
+                          >
+                            <input
+                              type="radio"
+                              name="option-{{option.name}}-{{ forloop.parentloop.index }}"
+                              value="{{ option_value.name }}"
+                              form="{{ form_id }}"
+                              {% if forloop.first %}
+                                checked
+                              {% endif %}
+                            >
+                            <span class="option-values__value-name">
+                              {{ option_value.name }}
+                            </span>
+                          </label>
+                        {%- endfor -%}
+                        </div>
+                      </div>
+                    {%- endfor -%}
+                  </form>
+                  <script type="application/json" data-variants-info>
+                    {{ product.variants | json }}
+                  </script>
+                </custom-variant-picker>
+              {%- else -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ product.selected_or_first_available_variant.id }}"
+                  form="{{ form_id }}"
+                >
+              {%- endunless -%}
+          {%- endcase -%}
+        {%- endfor -%}
+        {%- assign collapsible_blocks = section.blocks | where: 'type', 'collapsible_content' -%}
+        {%- if collapsible_blocks.size > 0 -%}
+          <div class="featured-product-info__collapsible-content">
+            {%- for block in collapsible_blocks -%}
+              {%- if block.settings.title != blank -%}
+                <div class="featured-product-info__collapsible-item">
+                  <label class="collapsible-item__title">
+                    <input name="product-accordion" type="radio" {% if forloop.first %}checked{% endif %}>
+                    {{ block.settings.title }}
+                      <span class="collapsible-item__icon-minus">{{ 'icon-minus.svg' | inline_asset_content }}</span>
+                      <span class="collapsible-item__icon-plus">{{ 'icon-plus.svg' | inline_asset_content }}</span>
+                  </label>
+                  <div class="collapsible-item__text-container">
+                    <div class="collapsible-item__text">
+                      {{ block.settings.text }}
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endunless -%}
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+<script src="{{ 'custom-featured-product-slider.js' | asset_url }}" defer></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Custom Featured Product",
+  "tag": "section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "scheme-1"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Slides per view",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section paddings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top mobile",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom mobile",
+      "default": 25
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Title",
+      "type": "title",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "name": "Price",
+      "type": "price",
+      "limit": 1
+    },
+    {
+      "name": "Variant picker",
+      "type": "variant_picker",
+      "limit": 1
+    },
+    {
+      "name": "Buy buttons",
+      "type": "buy_buttons",
+      "limit": 1
+    },
+    {
+      "name": "Separator",
+      "type": "separator",
+      "settings": [
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 10
+        }
+      ]
+    },
+    {
+      "name": "Text",
+      "type": "text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Default text</p>"
+        }
+      ]
+    },
+    {
+      "name": "Collapsible content",
+      "type": "collapsible_content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Put some text here</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Featured Product"
+    }
+  ]
+}
+{% endschema %}
