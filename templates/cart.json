@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "cart-items": {
@@ -10,11 +19,6 @@
     },
     "cart-footer": {
       "type": "main-cart-footer",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 20,
-        "padding_bottom": 40
-      },
       "blocks": {
         "subtotal": {
           "type": "subtotal",
@@ -28,11 +32,32 @@
       "block_order": [
         "subtotal",
         "buttons"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 20,
+        "padding_bottom": 40
+      }
+    },
+    "1761127423b5fe8c23": {
+      "type": "apps",
+      "blocks": {
+        "bogos_io_free_gift_gift_slider_view_UgKrkM": {
+          "type": "shopify://apps/bogos-io-free-gift/blocks/gift-slider-view/0432bba6-720a-4e95-be5a-b868386f7aa6",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bogos_io_free_gift_gift_slider_view_UgKrkM"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     }
   },
   "order": [
     "cart-items",
-    "cart-footer"
+    "cart-footer",
+    "1761127423b5fe8c23"
   ]
 }
